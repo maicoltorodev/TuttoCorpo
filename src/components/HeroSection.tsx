@@ -2,7 +2,7 @@
 
 import { ArrowRight, Sparkles, Star, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, Variants } from 'framer-motion'
 import { useRef } from 'react'
 
 export default function HeroSection() {
@@ -11,7 +11,7 @@ export default function HeroSection() {
   const yImage = useTransform(scrollY, [0, 500], [0, -100])
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -22,7 +22,7 @@ export default function HeroSection() {
     }
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
