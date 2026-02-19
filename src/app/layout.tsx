@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'TuttoCorpo Studio' }],
   metadataBase: new URL('https://tutto-corpo.vercel.app'),
   openGraph: {
-    title: 'TuttoCorpo | Professional Pilates & Movement',
+    title: 'TuttoCorpo | Pilates Profesional y Movimiento',
     description: 'Transforma tu vida a través del control y la precisión. Únete a nuestro estudio exclusivo.',
     url: 'https://tutto-corpo.vercel.app',
     siteName: 'TuttoCorpo Pilates',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TuttoCorpo | Professional Pilates & Movement',
+    title: 'TuttoCorpo | Pilates Profesional y Movimiento',
     description: 'Clases premium de Pilates con atención personalizada.',
     images: ['/imagen-metadata.png'],
   },
