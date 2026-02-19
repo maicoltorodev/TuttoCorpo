@@ -1,182 +1,149 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useCallback } from 'react'
+import { Calendar, User, Phone, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react'
 
-import { Calendar, CheckCircle2, Loader2, Fingerprint, ArrowRight } from 'lucide-react'
+type Step = 'form' | 'select-class' | 'loading' | 'success'
+
+const CLASSES = [
+  'Pilates Core',
+  'Reformer Flow',
+  'Mat Precision',
+  'Power Tower',
+  'Core Recovery'
+]
 
 export default function BookingSection() {
+  const [step, setStep] = useState<Step>('form')
   const [cedula, setCedula] = useState('')
   const [selectedClass, setSelectedClass] = useState('')
-  const [step, setStep] = useState<1 | 2 | 3>(1)
-  const [status, setStatus] = useState<'idle' | 'loading'>('idle')
 
-  const classes = [
-    { name: 'Pilates Core', time: '07:00' },
-    { name: 'Reformer Flow', time: '08:30' },
-    { name: 'Mat Precision', time: '10:00' },
-    { name: 'Power Tower', time: '17:00' },
-    { name: 'Core Recovery', time: '18:30' },
-  ]
-
-  const handleVerify = (e: React.FormEvent) => {
+  const handleNext = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!cedula) return
-    setStatus('loading')
-
-    setTimeout(() => {
-      setStatus('idle')
-      setStep(2)
-    }, 1000)
+    setStep('select-class')
   }
 
-  const handleBook = (className: string) => {
-    setSelectedClass(className)
-    setStatus('loading')
-
-    setTimeout(() => {
-      setStatus('idle')
-      setStep(3)
-    }, 1500)
+  const handleConfirm = () => {
+    if (!selectedClass) return
+    setStep('loading')
+    // Simulación de API
+    setTimeout(() => setStep('success'), 1500)
   }
 
   return (
-    <section id="reservas" className="py-24 bg-white relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-1 bg-brand-gradient opacity-20" />
-
-      <div className="container mx-auto px-6">
+    <section id="reservas" className="py-32 bg-brand-deep relative overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="section-title mb-4">Agenda tu Clase</h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-              Gestiona tu bienestar en segundos con nuestro sistema inteligente.
+
+          <div className="text-center mb-16 reveal-up stagger-1">
+            <h2 className="text-5xl md:text-7xl font-display font-bold text-white mb-6">
+              Haz tu <span className="font-serif italic text-brand-mint">Reserva</span>
+            </h2>
+            <p className="text-xl text-white/50 max-w-xl mx-auto">
+              Gestiona tu sesión de forma rápida y sencilla.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="card-premium max-w-2xl mx-auto border-t-8 border-t-brand-purple relative overflow-hidden min-h-[400px] flex flex-col justify-center"
-          >
-            <AnimatePresence mode="wait">
-              {step === 3 ? (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.1 }}
-                  className="text-center py-8"
-                >
-                  <div className="w-24 h-24 bg-brand-gradient text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                    <CheckCircle2 className="w-12 h-12" />
-                  </div>
-                  <h3 className="text-4xl font-serif font-bold text-brand-gray mb-4">¡Listo!</h3>
-                  <p className="text-brand-purple text-xl font-bold mb-2">Tu clase de {selectedClass} ha sido agendada.</p>
-                  <p className="text-slate-500 mb-10">Te hemos enviado un recordatorio a tu WhatsApp.</p>
-                  <button
-                    onClick={() => {
-                      setStep(1)
-                      setCedula('')
-                      setSelectedClass('')
-                    }}
-                    className="btn-brand-primary"
-                  >
-                    Agendar otra clase
-                  </button>
-                </motion.div>
-              ) : step === 1 ? (
-                <motion.form
-                  key="step1"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  onSubmit={handleVerify}
-                  className="space-y-8 p-4"
-                >
-                  <div className="text-center mb-10">
-                    <Fingerprint className="w-16 h-16 text-brand-purple mx-auto mb-4 opacity-20" />
-                    <h3 className="text-2xl font-bold text-brand-gray">Identifícate</h3>
-                    <p className="text-slate-500">Ingresa tu cédula para comenzar</p>
-                  </div>
-
-                  <div className="relative group">
-                    <Fingerprint className="absolute left-6 top-1/2 -translate-y-1/2 text-brand-purple w-6 h-6 group-focus-within:text-brand-mint transition-colors" />
+          <div className="card-premium max-w-xl mx-auto border-none bg-white/5 backdrop-blur-2xl p-8 md:p-12 reveal-up stagger-2">
+            {step === 'form' && (
+              <form onSubmit={handleNext} className="space-y-8 animate-fade-in">
+                <div className="space-y-4">
+                  <label className="text-xs font-bold uppercase tracking-widest text-brand-mint">Documento de Identidad (Cédula)</label>
+                  <div className="relative">
+                    <User className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20 w-6 h-6" />
                     <input
-                      type="text"
-                      placeholder="Número de Cédula"
-                      value={cedula}
-                      onChange={(e) => setCedula(e.target.value)}
-                      className="input-premium pl-16 py-6 text-xl"
                       required
-                      autoFocus
+                      type="tel"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="Ingresa tu número de cédula"
+                      className="w-full bg-white/5 border border-white/10 rounded-3xl py-5 pl-14 pr-6 text-white text-lg focus:outline-none focus:border-brand-mint focus:ring-4 focus:ring-brand-mint/10 transition-all font-sans"
+                      value={cedula}
+                      onChange={e => setCedula(e.target.value.replace(/\D/g, ''))}
                     />
                   </div>
+                </div>
 
-                  <button
-                    type="submit"
-                    disabled={status === 'loading' || !cedula}
-                    className="w-full btn-brand-primary flex items-center justify-center gap-4 text-xl py-6"
-                  >
-                    {status === 'loading' ? (
-                      <Loader2 className="w-8 h-8 animate-spin" />
-                    ) : (
-                      <>
-                        Verificar <ArrowRight className="w-6 h-6" />
-                      </>
-                    )}
-                  </button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-8"
+                <button
+                  type="submit"
+                  className="btn-brand-primary w-full py-5 rounded-3xl bg-brand-mint text-brand-deep hover:bg-white hover:text-brand-deep border-none flex items-center justify-center gap-3 text-lg font-bold transition-all shadow-none"
                 >
-                  <div className="bg-brand-mint/10 p-8 rounded-[2.5rem] border border-brand-mint/20">
-                    <h3 className="text-2xl font-serif font-bold text-brand-purple text-center mb-2">¡Hola! ✨</h3>
-                    <p className="text-brand-gray text-center font-medium">Elije la clase que deseas agendar:</p>
-                  </div>
+                  Siguiente <ArrowRight className="w-5 h-5" />
+                </button>
+              </form>
+            )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {classes.map((c) => (
+            {step === 'select-class' && (
+              <div className="space-y-8 animate-fade-in">
+                <div className="space-y-4">
+                  <label className="text-xs font-bold uppercase tracking-widest text-brand-mint">Selecciona tu Sesión</label>
+                  <div className="grid grid-cols-1 gap-3">
+                    {CLASSES.map((cls) => (
                       <button
-                        key={c.name}
-                        onClick={() => handleBook(c.name)}
-                        disabled={status === 'loading'}
-                        className="p-6 rounded-3xl border border-slate-100 bg-slate-50 hover:bg-white hover:border-brand-purple hover:shadow-xl transition-all text-left group flex flex-col gap-1"
+                        key={cls}
+                        onClick={() => setSelectedClass(cls)}
+                        className={`w-full py-4 px-6 rounded-2xl border transition-all text-left font-bold ${selectedClass === cls
+                          ? 'bg-brand-mint text-brand-deep border-brand-mint shadow-lg shadow-brand-mint/20'
+                          : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20 hover:text-white'
+                          }`}
                       >
-                        <span className="text-xs font-bold text-brand-purple uppercase tracking-widest">{c.time}</span>
-                        <span className="text-lg font-bold text-brand-gray group-hover:text-brand-purple transition-colors">{c.name}</span>
-                        {status === 'loading' && selectedClass === c.name && (
-                          <Loader2 className="w-4 h-4 animate-spin mt-2 text-brand-purple" />
-                        )}
+                        {cls}
                       </button>
                     ))}
                   </div>
+                </div>
 
+                <div className="flex gap-4">
                   <button
-                    onClick={() => setStep(1)}
-                    className="w-full text-xs font-bold text-slate-400 hover:text-brand-purple transition-colors uppercase tracking-[0.2em] text-center"
+                    onClick={() => setStep('form')}
+                    className="flex-1 py-5 rounded-3xl border border-white/10 text-white font-bold hover:bg-white/5 transition-all"
                   >
-                    Cerrar sesión
+                    Atrás
                   </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                  <button
+                    disabled={!selectedClass}
+                    onClick={handleConfirm}
+                    className={`flex-[2] py-5 rounded-3xl font-bold flex items-center justify-center gap-3 transition-all ${selectedClass
+                      ? 'bg-brand-mint text-brand-deep hover:bg-white'
+                      : 'bg-white/10 text-white/20 cursor-not-allowed'
+                      }`}
+                  >
+                    Confirmar Reserva <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
 
+            {step === 'loading' && (
+              <div className="py-20 flex flex-col items-center justify-center text-center">
+                <Loader2 className="w-12 h-12 text-brand-mint animate-spin mb-4" />
+                <p className="text-white font-bold tracking-widest font-sans">PROCESANDO RESERVA...</p>
+              </div>
+            )}
+
+            {step === 'success' && (
+              <div className="py-12 flex flex-col items-center justify-center text-center animate-fade-in">
+                <div className="w-24 h-24 bg-brand-mint/20 rounded-full flex items-center justify-center text-brand-mint mb-8">
+                  <CheckCircle2 size={56} />
+                </div>
+                <h3 className="text-4xl font-bold text-white mb-4 tracking-tight">¡Reserva Exitosa!</h3>
+                <p className="text-xl text-white/50 mb-10 font-sans">Has reservado <strong>{selectedClass}</strong> para el titular de la cédula <strong>{cedula}</strong>.</p>
+                <button
+                  onClick={() => {
+                    setStep('form')
+                    setCedula('')
+                    setSelectedClass('')
+                  }}
+                  className="text-brand-mint font-bold uppercase tracking-widest hover:text-white transition-colors font-sans text-sm"
+                >
+                  Hacer otra reserva
+                </button>
+              </div>
+            )}
+          </div>
 
         </div>
       </div>
     </section>
   )
 }
-
