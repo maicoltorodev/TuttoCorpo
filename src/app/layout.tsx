@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   description: 'Descubre el poder del movimiento consciente en TuttoCorpo. Clases premium de Pilates con equipos de última generación y atención personalizada para transformar tu cuerpo y mente.',
   keywords: ['Pilates', 'Reformer', 'Bienestar', 'Fitness Premium', 'Salud Integral', 'TuttoCorpo'],
   authors: [{ name: 'TuttoCorpo Studio' }],
-  metadataBase: new URL('https://tuttocorpo.com'), // Reemplazar con la URL real cuando esté disponible
+  metadataBase: new URL('https://tutto-corpo.vercel.app'),
   openGraph: {
     title: 'TuttoCorpo | Professional Pilates & Movement',
     description: 'Transforma tu vida a través del control y la precisión. Únete a nuestro estudio exclusivo.',
-    url: 'https://tuttocorpo.com',
+    url: 'https://tutto-corpo.vercel.app',
     siteName: 'TuttoCorpo Pilates',
     images: [
       {
